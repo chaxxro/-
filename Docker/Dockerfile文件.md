@@ -39,7 +39,7 @@ Docker 还存在一个特殊的镜像，名为 scratch，这个镜像是虚拟�
 
 每一个 `RUN` 的行为，就和手工建立镜像的过程一样：新建立一层，在其上执行这些命令，执行结束后，commit 这一层的修改，构成新的镜像
 
-```
+```dockerfile
 FROM debian:stretch
 
 RUN apt-get update
@@ -55,7 +55,7 @@ RUN make -C /usr/src/redis install
 
 正确的写法应该是
 
-```
+```dockerfile
 FROM debian:stretch
 
 RUN set -x; buildDeps='gcc libc6-dev make wget' \
@@ -74,7 +74,7 @@ RUN set -x; buildDeps='gcc libc6-dev make wget' \
 
 ## COPY 复制文件
 
-```sh
+```dockerfile
 COPY [--chown=<user>:<group>] [--from=<阶段>] <源路径>... <目标路径>
 COPY [--chown=<user>:<group>] [--from=<阶段>] ["<源路径1>",... "<目标路径>"]
 # COPY 指令将从构建上下文目录中 <源路径> 的文件/目录复制到新的一层的镜像内的 <目标路径> 位置
@@ -92,9 +92,11 @@ COPY [--chown=<user>:<group>] [--from=<阶段>] ["<源路径1>",... "<目标路�
 
 `ADD` 命令与 `COPY` 命令基本一致，只是在 `COPY` 命令的基础上增加了两个功能：
 
-1. 支持源文件是一个 URL，此时 docker 引擎会试图去下载这个文件放到目的路径中，下载后的文件权限自动设置为 600
+1. 支持源文件是一个 URL，此时 docker 引擎会试图去下载这个文件放到目的路径中，下载后的文件权限自动设置为 600。如果权限需要调整，则还需要一个 `RUN` 来调整权限。如果下载的是压缩包，则还需要一个 `RUN` 来解压
 
-2. 支持自动解压，如果源文件是一个 tar，则会自动进行解压
+2. 如果源文件是一个 tar 压缩文件，则会自动进行解压。如果只是希望复制压缩文件进镜像，则不能使用 `ADD`
+
+Docker 官方推荐尽可能的使用 `COPY`，因为 `COPY` 的语义很明确，就是复制文件而已，而 `ADD` 则包含了更复杂的功能，其行为也不一定很清晰。最适合使用 `ADD` 的场合，就是所提及的需要自动解压缩的场合
 
 ## CMD 容器启动命令
 
@@ -118,13 +120,14 @@ COPY [--chown=<user>:<group>] [--from=<阶段>] ["<源路径1>",... "<目标路�
 
 `ENTRYPOINT` 在运行时也可以替代，不过比 `CMD` 要略显繁琐，需要通过 `docker run` 的参数 `--entrypoint` 来指定
 
-当指定了 `ENTRYPOINT` 后，`CMD` 的含义就发生了改变，不再是直接的运行其命令，而是将 `CMD` 的内容作为参数传给 `ENTRYPOINT` 指令
+当指定了 `ENTRYPOINT` 后，`CMD` 的含义就发生了改变，不再是直接的运行其命令，而是将 `CMD` 的内容作为参数传给 `ENTRYPOINT` 指令，即 `<ENTRYPOINT> "<CMD>"`
 
 ## ENV 设置环境变量
 
 - `ENV <key> <value>`
-
 - `ENV <key1>=<value1> <key2>=<value2>...`
+
+无论是后面的其它指令，如 `RUN`，还是运行时的应用，都可以直接使用这里定义的环境变量
 
 ## ARG 构建参数
 
@@ -132,11 +135,23 @@ COPY [--chown=<user>:<group>] [--from=<阶段>] ["<源路径1>",... "<目标路�
 
 构建参数和 `ENV` 的效果一样，都是设置环境变量
 
-所不同的是，`ARG` 所设置的构建环境的环境变量，在将来容器运行时是不会存在这些环境变量的
+所不同的是，`ARG` 所设置的环境变量，在将来容器运行时是不会存在的
 
-`ARG` 指令是定义参数名称，以及定义其默认值，该默认值可以在构建命令 `docker build` 中用 `--build-arg <参数名>=<值>` 来覆盖
+`ARG` 指令是定义参数名称以及定义其默认值，该默认值可以在构建命令 `docker build` 中用 `--build-arg <参数名>=<值>` 来覆盖
 
 `ARG` 指令有生效范围，如果在 `FROM` 指令之前指定，那么只能用于 `FROM` 指令前
+
+```dockerfile
+# 只在 FROM 中生效
+ARG DOCKER_USERNAME=library
+
+FROM ${DOCKER_USERNAME}/alpine
+
+# 要想在 FROM 之后使用，必须再次指定
+ARG DOCKER_USERNAME=library
+
+RUN set -x ; echo ${DOCKER_USERNAME}
+```
 
 ## VOLUME 定义匿名卷
 
@@ -152,15 +167,16 @@ COPY [--chown=<user>:<group>] [--from=<阶段>] ["<源路径1>",... "<目标路�
 
 `EXPOSE <端口1> [<端口2>...]`
 
-`EXPOSE` 指令是声明容器运行时提供服务的端口，在容器运行时并不会因为这个声明应用就会开启这个端口的服务
+`EXPOSE` 指令是声明容器运行时提供服务的端口，其好处 有两个：
 
-是帮助镜像使用者理解这个镜像服务的守护端口，以方便配置映射
+- 帮助镜像使用者理解这个镜像服务的守护端口，以方便配置映射
+- 在运行时使用随机端口映射时，也就是 `docker run -P` 时，会自动随机映射 `EXPOSE` 的端口
 
-在运行时使用随机端口映射时，也就是 docker run -P 时，会自动随机映射 EXPOSE 的端口
+需要将 `EXPOSE` 和在运行时使用 `-p <宿主端口>:<容器端口>` 区分开来。`-p` 是映射宿主端口和容器端口，换句话说，就是将容器的对应端口服务公开给外界访问，而 `EXPOSE` 仅仅是声明容器打算使用什么端口而已，并不会自动在宿主进行端口映射
 
 ## WORKDIR 指定工作目录
 
-`WORKDIR <工作目录路径>` 指定工作目录，以后各层的当前目录就被改为指定的目录，如该目录不存在，`WORKDIR` 会帮你建立目录
+`WORKDIR <工作目录路径>` 指定工作目录（当前目录），以后各层的当前目录就被改为指定的目录，如该目录不存在，`WORKDIR` 会帮你建立目录
 
 每一个 `RUN` 都是启动一个容器、执行命令、然后提交存储层文件变更，因此如果需要改变以后各层的工作目录的位置，那么应该使用 `WORKDIR` 指令
 

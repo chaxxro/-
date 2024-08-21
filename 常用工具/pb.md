@@ -234,7 +234,7 @@ protoc --proto_path=IMPORT_PATH --cpp_out=DST_DIR --java_out=DST_DIR --python_ou
 每个 message 都生成了一个类，为每个字段提供了读写函数
 
 ```cpp
-// required uint64 id = 1;
+  // required uint64 id = 1;
   inline bool has_id() const;
   inline void clear_id();
   static const int kIdFieldNumber = 1;
@@ -276,22 +276,21 @@ protoc --proto_path=IMPORT_PATH --cpp_out=DST_DIR --java_out=DST_DIR --python_ou
   inline ::google::protobuf::RepeatedPtrField< ::tutorial::Student_PhoneNumber >* mutable_phone();
 ```
 
-getter 函数具有与字段名一模一样的名字，并且是小写的，而 setter 函数都是以 set_ 前缀开头
-
-has_ 前缀的函数，对每一个单一的（required 或 optional 的）字段来说，如果字段被置（set）了值，该函数会返回true
-
-每一个字段还有一个 clear_ 前缀的函数，用来将字段重置（un-set）到空状态（empty state）
-
-string 类型字段还有前缀为 mutable_ 的函数返回 string 的直接指针
-
-重复的字段也有一些特殊的函数，得到重复字段的 _size，通过索引（index）来获取一个指定的电话号码，通过指定的索引（index）来更新一个已经存在的电话号码，向消息（message）中添加另一个电话号码，然后你可以编辑它（重复的标量类型有一个add_前缀的函数，允许你传新值进去）
+- getter 函数具有与字段名一模一样的名字，并且是小写的
+- setter 函数都是以 set_ 前缀开头
+- has_ 函数，对每一个单一的（required 或 optional 的）字段来说，如果字段被置了值，该函数会返回 true
+- 每一个字段还有一个 clear_ 函数，用来将字段重置到空状态
+- string 类型字段还有前缀为 mutable_ 的函数返回 string 的直接指针
+- repeated 字段也有一些特殊的函数，name_size 函数得到重复字段的数量，getter 函数可以通过索引来获取一个指定的元素，mutable_name 可以通过指定的索引来更新一个已经存在的元素，add_name 可以添加一个元素并返回新元素的指针
 
 每一个消息（message）还包含了其他一系列函数，用来检查或管理整个消息
 
 ```cpp
-bool IsInitialized() const; //检查是否全部的required字段都被置（set）了值。
+bool IsInitialized() const; //检查是否全部的required字段都被置（set）了值
 
-void CopyFrom(const Person& from); //用外部消息的值，覆写调用者消息内部的值。
+void CopyFrom(const Person& from); //用外部消息的值，覆盖调用者消息内部的值
+
+void Swap(Person *p);  // 交换两个对象
 
 void Clear();	//将所有项复位到空状态（empty state）。
 

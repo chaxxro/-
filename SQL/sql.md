@@ -331,7 +331,7 @@ from tables
 select a.column1, a.column2, b.column1 from tab1 a inner join tab2 b on a.column1 = b.column1;
 ```
 
-{% asset_img 01.png %}
+![01](sql.assets/01.png)
 
 - left join 获取左表所有记录，即使右表没有对应匹配的记录
 
@@ -339,7 +339,7 @@ select a.column1, a.column2, b.column1 from tab1 a inner join tab2 b on a.column
 select a.column1, a.column2, b.column1 from tab1 a left join tab2 b on a.column1 = b.column1;
 ```
 
-{% asset_img 02.png %}
+![02](sql.assets/02.png)
 
 - right join 获取右表所有记录，即使左表没有对应匹配的记录
 
@@ -347,13 +347,13 @@ select a.column1, a.column2, b.column1 from tab1 a left join tab2 b on a.column1
 select a.column1, a.column2, b.column1 from tab1 a right join tab2 b on a.column1 = b.column1;
 ```
 
-{% asset_img 03.png %}
+![03](sql.assets/03.png)
 
 - full outer join 只要左表和右表其中一个表中存在匹配
 
-{% asset_img 04.png %}
+![04](sql.assets/04.png)
 
-{% asset_img 05.png %}
+![05](sql.assets/05.png)
 
 ## DML
 

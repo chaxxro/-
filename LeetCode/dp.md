@@ -243,6 +243,28 @@ dp[i] : sum(subset(...)) == i
 
 [题目](https://leetcode.com/problems/all-possible-full-binary-trees/description/)
 
+## lc918
+
+```cpp
+/*
+1. dp
+dp[i][j] 表示以 j 开始长度为 i 的子串和
+dp[i][j] = dp[k][j] + dp[i - k][j + k]
+
+2. 环形子数组的最大和，可以分为两种情况：
+情况一：最大和的子数组不包含环形部分，即为普通的最大子数组和
+情况二：最大和的子数组包含环形部分，可以转换为求数组总和减去最小子数组和
+所以可以转换成求普通数组的最大子串和、最小子串和
+最大子串和 large[i] = max(nums[i], large[i - 1] + nums[i])
+最小子串和 little[i] = min(nums[i], little[i - 1] + nums[i])
+需要特殊处理的情况是当最小子数组和等于数组和
+*/
+```
+
+
+
+[题目](https://leetcode.com/problems/maximum-sum-circular-subarray/description/?envType=study-plan-v2&envId=top-interview-150)
+
 ## lc926
 
 ```cpp
