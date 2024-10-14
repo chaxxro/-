@@ -1,10 +1,10 @@
 # RedisObject
 
-Redis 键值对中的每一个值都是用 `redisObject` 保存的
+`redisEntry` 中的 `key` 和 `val` 都是用 `redisObject` 保存的
 
-## 基本对象结构
+## 数据结构
 
-因为 Redis 的数据类型有很多，而且不同数据类型都有些相同的元数据要记录（比如最后一次访问的时间、被引用的次数等），所以 Redis 会用一个 `redisObject` 结构体来统一记录这些元数据，同时指向实际数据
+因为 Redis 的数据类型有很多，而且不同数据类型都有些相同的元数据要记录（比如最后一次访问的时间、被引用的次数等），所以 Redis 会用一个 `redisObject` 结构体来统一记录这些元数据，同时用一个指针指向实际数据
 
 ```c
 /* The actual Redis Object */
@@ -13,7 +13,6 @@ Redis 键值对中的每一个值都是用 `redisObject` 保存的
 #define OBJ_SET 2       /* Set object. */
 #define OBJ_ZSET 3      /* Sorted set object. */
 #define OBJ_HASH 4      /* Hash object. */
-
 #define OBJ_MODULE 5    /* Module object. */
 #define OBJ_STREAM 6    /* Stream object. */
 
@@ -33,13 +32,13 @@ typedef struct redisObject {
 
 一个 `redisObject` 占 16 个字节，元数据占 8 个字节，实际数据指针占 8 个字节
 
-`encoding` 记录了对象使用的底层编码方式，不同的场景同一类型对象可能使用不同的底层编码方式
+- `encoding` 记录了对象使用的底层编码方式，不同的场景同一类型对象可能使用不同的底层编码方式
 
-`lru` 记录了这个对象最后一次被访问的时间，用于淘汰过期的键值对
+- `lru` 记录了这个对象最后一次被访问的时间，用于淘汰过期的键值对
 
-`refcount` 记录了对象的引用计数
+- `refcount` 记录了对象的引用计数
 
-`ptr` 指向数据的指针
+- `ptr` 指向数据的指针
 
 ![01](redisObject.assets/01.png)
 
@@ -64,9 +63,5 @@ typedef struct redisObject {
 ```
 
 ![02](redisObject.assets/02.png)
-
-String 类型的底层实现只有一种数据结构，也就是简单动态字符串
-
-List、Hash、Set 和 Sorted Set 这四种数据类型，都有两种底层实现结构，这四种类型为集合类型，特点是一个键对应一个集合的数据
 
 ![03](redisObject.assets/03.png)

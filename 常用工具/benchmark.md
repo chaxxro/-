@@ -1,6 +1,8 @@
 # benchmark
 
-## 基本使用
+## BENCHMARK
+
+`BENCHMARK` 宏用于注册一个简单的基准测试函数，不使用基准测试夹具
 
 每一个 benchmark 测试用例都是一个类型为 `std::function<void(benchmark::State&)>` 的函数，其中 `benchmark::State&` 负责测试的运行及额外参数的传递
 
@@ -32,6 +34,35 @@ BENCHMARK_MAIN();
 测试用例编写完成后需要使用 `BENCHMARK()` 进行注册
 
 最后使用 `BENCHMARK_MAIN()` 替代直接编写的 `main` 函数，它会处理命令行参数并运行所有注册过的测试用例生成测试结果
+
+## BENCHMARK_REGISTER_F
+
+`BENCHMARK_REGISTER_F` 宏用于注册一个使用基准测试夹具（Fixture）的基准测试函数。基准测试夹具允许你在基准测试运行之前和之后执行一些初始化和清理操作
+
+```cpp
+#include <benchmark/benchmark.h>
+// 继承自 benchmark::Fixture
+class MyFixture : public benchmark::Fixture {
+public:
+    void SetUp(const ::benchmark::State& state) override {
+        // 初始化代码
+    }
+
+    void TearDown(const ::benchmark::State& state) override {
+        // 清理代码
+    }
+};
+// 定义基准测试函数
+BENCHMARK_DEFINE_F(MyFixture, BM_FixtureFunction)(benchmark::State& state) {
+    for (auto _ : state) {
+        // 基准测试代码
+    }
+}
+
+BENCHMARK_REGISTER_F(MyFixture, BM_FixtureFunction);
+
+BENCHMARK_MAIN();
+```
 
 ## 传递参数
 
