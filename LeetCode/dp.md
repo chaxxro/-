@@ -432,3 +432,22 @@ dp[mask][i] = any(
 [题目](https://leetcode.com/problems/distribute-repeating-integers/)
 
 [分析](https://www.bilibili.com/video/BV1qt4y1a7Lm)
+
+## lc2463
+
+[题目](https://leetcode.com/problems/minimum-total-distance-traveled/description/)
+
+```cpp
+/*
+所有的机器人排序后所对应的工厂顺序，一定就是工厂的位置顺序
+任意两个机器人 i<j，如果对应的工厂是 x 和 y，那么一定有 x<y
+如果 i 与 y 配对、j 与 x 配对，那么显然不会比 i 与 x 配对、j 与 y 配对更优
+
+dp[i][j] 表示前 i 个工厂负责前 j 个机器人维修
+根据上面的结论，状态转移时只需要关系最后一个工厂可以覆盖的机器人
+for (int k = 0; k <= factory[i - 1][1]; ++k) {
+  dp[i][j] = min(dp[i][j], dp[i - 1][j - k] + sum(dist(j - k, i)) );
+}
+*/
+```
+

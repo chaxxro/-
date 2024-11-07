@@ -117,5 +117,11 @@ void bench_vector_reserve(benchmark::State& state)
 BENCHMARK_TEMPLATE(bench_vector_reserve, std::string, 100);
 ```
 
+## 结果分析
 
+- Time 表示全部时间，包括所有的等待时间、I/O 操作时间等
+- CPU 表示实际执行代码的时间
+- Iterations 表示基准测试运行的次数，更多的迭代次数可以提供更稳定的结果
+
+如果墙钟时间和 CPU 时间差异较大，可能表明存在 I/O 操作或其他阻塞操作
 

@@ -196,8 +196,15 @@ for (const google::protobuf::Any& detail : status.details()) {
 使用 `service` 来定义一个 RPC 服务接口
 
 ```pb
+// 一应一答
 service SearchService {
   rpc Search(SearchRequest) returns (SearchResponse);
+}
+// 流式
+service StreamService {
+    rpc List(StreamRequest) returns (stream StreamResponse) {};
+    rpc Record(stream StreamRequest) returns (StreamResponse) {};
+    rpc Route(stream StreamRequest) returns (stream StreamResponse) {};
 }
 ```
 
