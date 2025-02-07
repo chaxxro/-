@@ -19,7 +19,6 @@ SRANDMEMBER key [count]
 # 将 src 元素 member 移动到 dst
 SMOVE source destination member
 
-
 # 获取集合元素数量
 SCARD key
 # 检测元素是否在集合中

@@ -2,13 +2,13 @@
 
 生成火焰图分为 3 步
 
-1. 捕获堆栈，可使用 `perf record` 和 `perf script`
+1. 捕获堆栈，可使用 `perf record -F 1000 -a -g -p` 和 `perf script > out.perf`
 
 2. 折叠堆栈，可使用 stackcollapse-perf.pl，如 `./stackcollapse-perf.pl out.perf > out.folded`
 
 3. 调用 flamegraph.pl
 
-```
+```sh
 ./flamegraph.pl [options] infile > outfile.svg
 
 --title TEXT     # change title text

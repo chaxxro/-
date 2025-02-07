@@ -19,3 +19,7 @@ BFS + 双向 BFS
 ## lc909
 
 [题目](https://leetcode.com/problems/snakes-and-ladders/description/?envType=study-plan-v2&envId=top-interview-150)
+
+## lc1765
+
+[题目](https://leetcode.com/problems/map-of-highest-peak/description/?envType=daily-question&envId=2025-01-22)

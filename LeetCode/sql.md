@@ -219,3 +219,56 @@ from Activity
 group by player_id
 ```
 
+## lc577
+
+```sql
+Create table If Not Exists Employee (empId int, name varchar(255), supervisor int, salary int)
+Create table If Not Exists Bonus (empId int, bonus int)
+Truncate table Employee
+insert into Employee (empId, name, supervisor, salary) values ('3', 'Brad', NULL, '4000')
+insert into Employee (empId, name, supervisor, salary) values ('1', 'John', '3', '1000')
+insert into Employee (empId, name, supervisor, salary) values ('2', 'Dan', '3', '2000')
+insert into Employee (empId, name, supervisor, salary) values ('4', 'Thomas', '3', '4000')
+Truncate table Bonus
+insert into Bonus (empId, bonus) values ('2', '500')
+insert into Bonus (empId, bonus) values ('4', '2000')
+
+select a.name, b.bonus
+from Employee a
+left join Bonus b on a.empId = b.empId
+where b.bonus < 1000 or b.bonus is null
+```
+
+## lc584
+
+```sql
+Create table If Not Exists Customer (id int, name varchar(25), referee_id int)
+Truncate table Customer
+insert into Customer (id, name, referee_id) values ('1', 'Will', NULL)
+insert into Customer (id, name, referee_id) values ('2', 'Jane', NULL)
+insert into Customer (id, name, referee_id) values ('3', 'Alex', '2')
+insert into Customer (id, name, referee_id) values ('4', 'Bill', NULL)
+insert into Customer (id, name, referee_id) values ('5', 'Zack', '1')
+insert into Customer (id, name, referee_id) values ('6', 'Mark', '2')
+
+select name 
+from Customer
+where referee_id != 2 or referee_id is null
+```
+
+## lc586
+
+```sql
+Create table If Not Exists orders (order_number int, customer_number int)
+Truncate table orders
+insert into orders (order_number, customer_number) values ('1', '1')
+insert into orders (order_number, customer_number) values ('2', '2')
+insert into orders (order_number, customer_number) values ('3', '3')
+insert into orders (order_number, customer_number) values ('4', '3')
+
+select customer_number
+from Orders
+group by customer_number
+order by count(*) desc limit 1
+```
+

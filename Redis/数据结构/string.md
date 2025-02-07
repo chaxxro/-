@@ -24,7 +24,6 @@ SETRANGE key offset value
 # 获取字符串长度
 STRLEN key
 
-
 GET key
 MGET key [key ...]
 # 设置新的 value 并返回旧值
@@ -35,7 +34,6 @@ GETEX key [EX seconds|PX milliseconds|EXAT timestamp|PXAT milliseconds-timestamp
 GETRANGE key start end
 # 获取值并删除 key
 GETDEL key
-
 
 # 追加，如果 key 存在则将 value 追加到末尾，如果 key 不存在则将 key 设置为 value
 APPEND key value

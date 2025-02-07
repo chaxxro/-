@@ -6,7 +6,7 @@
 ```sh
 -a 显示服务器上所有的 sockets 连接，直接列出所有网络连接
 -l 显示正在监听的网络端口
--n 显示数字IP和端口，不通过域名服务器
+-n 显示数字 IP 和端口，不通过域名服务器
 -p 显示使用 socket 的对应的程序
 -t 只显示 TCP sockets
 -u 只显 示UDP sockets

@@ -39,3 +39,7 @@ dp[i][j] = max(A[i] + ... + A[x] - dp[x + 1][max(x, M)])
 [题目](https://leetcode.com/problems/stone-game-iii/description/)
 
 [题目](https://leetcode.com/problems/stone-game-iv/description/)
+
+## lc2017
+
+[题目](https://leetcode.com/problems/grid-game/description/?envType=daily-question&envId=2025-01-21)
