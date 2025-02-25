@@ -403,6 +403,10 @@ dp[i] = sum(dp[j]) j : i ~ n
 
 [题目](https://leetcode.com/problems/max-dot-product-of-two-subsequences/description/)
 
+## lc1524
+
+[题目](https://leetcode.com/problems/number-of-sub-arrays-with-odd-sum/submissions/1554458784/?envType=daily-question&envId=2025-02-25)
+
 ## lc1653
 
 ```cpp

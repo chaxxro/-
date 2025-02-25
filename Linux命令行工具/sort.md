@@ -15,4 +15,5 @@ sort [-bcCdfghiRMmnrsuVz] [-k field1[,field2]] [-S memsize] [-T dir] [-t char] [
 # -i 排序时除了 040 至 176 之间的 ASCII 字符外，忽略其他的字符
 # -r 以相反的顺序来排序
 # -k field1[,field2]] 按指定的列进行排序
+# -n 按数值大小进行比较
 ```
