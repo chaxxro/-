@@ -240,67 +240,118 @@ protoc --proto_path=IMPORT_PATH --cpp_out=DST_DIR --java_out=DST_DIR --python_ou
 
 每个 message 都生成了一个类，为每个字段提供了读写函数
 
+### 标量类型
+
+`int32`、`int64`、 `uint32`、 `uint64`、 `sint32`、 `sint64`、 `fixed32`、 `fixed64`、 `sfixed32`、 `sfixed64`、`float`、 `double`、 `bool`、 `string`、 `bytes`
+
+- 对于每个标量类型，生成的 getter 返回对应的C++类型，如 `int32_t`、`std::string` 等
+- setter 方法接受对应的类型参数
+- 如果字段是 optional 的，会有 `has_xxx()` 和 `clear_xxx()` 方法
+
 ```cpp
-  // required uint64 id = 1;
-  inline bool has_id() const;
-  inline void clear_id();
-  static const int kIdFieldNumber = 1;
-  inline ::google::protobuf::uint64 id() const;
-  inline void set_id(::google::protobuf::uint64 value);
+// int32 count = 1;
+int32_t count() const;
+void set_count(int32_t value);
 
-  // required string name = 2;
-  inline bool has_name() const;
-  inline void clear_name();
-  static const int kNameFieldNumber = 2;
-  inline const ::std::string& name() const;
-  inline void set_name(const ::std::string& value);
-  inline void set_name(const char* value);
-  inline void set_name(const char* value, size_t size);
-  inline ::std::string* mutable_name();
-  inline ::std::string* release_name();
-  inline void set_allocated_name(::std::string* name);
-
-  // optional string email = 3;
-  inline bool has_email() const;
-  inline void clear_email();
-  static const int kEmailFieldNumber = 3;
-  inline const ::std::string& email() const;
-  inline void set_email(const ::std::string& value);
-  inline void set_email(const char* value);
-  inline void set_email(const char* value, size_t size);
-  inline ::std::string* mutable_email();
-  inline ::std::string* release_email();
-  inline void set_allocated_email(::std::string* email);
-
-  // repeated .tutorial.Student.PhoneNumber phone = 4;
-  inline int phone_size() const;
-  inline void clear_phone();
-  static const int kPhoneFieldNumber = 4;
-  inline const ::tutorial::Student_PhoneNumber& phone(int index) const;
-  inline ::tutorial::Student_PhoneNumber* mutable_phone(int index);
-  inline ::tutorial::Student_PhoneNumber* add_phone();
-  inline const ::google::protobuf::RepeatedPtrField< ::tutorial::Student_PhoneNumber >& phone() const;
-  inline ::google::protobuf::RepeatedPtrField< ::tutorial::Student_PhoneNumber >* mutable_phone();
+// optional int32 count = 1;
+int32_t count() const;
+void set_count(int32_t value);
+bool has_count() const; // 检查字段是否被设置
+void clear_count();  // 重置为未设置状态。
 ```
 
-- getter 函数具有与字段名一模一样的名字，并且是小写的
-- setter 函数都是以 set_ 前缀开头
-- has_ 函数，对每一个单一的（required 或 optional 的）字段来说，如果字段被置了值，该函数会返回 true
-- 每一个字段还有一个 clear_ 函数，用来将字段重置到空状态
-- string 类型字段还有前缀为 mutable_ 的函数返回 string 的直接指针
-- repeated 字段也有一些特殊的函数，name_size 函数得到重复字段的数量，getter 函数可以通过索引来获取一个指定的元素，mutable_name 可以通过指定的索引来更新一个已经存在的元素，add_name 可以添加一个元素并返回新元素的指针
+### 枚举类型
 
-每一个消息（message）还包含了其他一系列函数，用来检查或管理整个消息
+- 生成对应的枚举类。
+- getter 返回枚举值，setter 接受枚举值。
+- 可能有检查值有效性的方法，或者 `IsValid()` 函数
+
+```cpp
+// enum Status { OK = 0; ERROR = 1; }
+// Status code = 2;
+Status code() const;
+void set_code(Status value);
+static const EnumDescriptor* Status_descriptor();  // 获取枚举元信息
+static bool Status_IsValid(int value);  // 检查值是否有效
+```
+
+### 消息类型
+
+- getter 返回 const 引用，`mutable_` 方法返回指针
+- `has_` 方法如果字段是 optional 的话。
+- `set_allocated_` 方法用于传递动态分配的对象所有权
+
+```cpp
+// message Address { ... }
+// Address addr = 3;
+const Address& addr() const;
+Address* mutable_addr();
+bool has_addr() const;  // 仅当字段为 optional 时存在
+void clear_addr();  // 仅当字段为 optional 时存在
+void set_allocated_addr(Address* addr);
+```
+
+### 重复字段
+
+- 使用 RepeatedField 或 RepeatedPtrField 容器
+- `add_xxx()` 方法添加元素
+- `mutable_xxx()` 返回容器指针
+- 通过索引访问元素，如 `xxx(int index)`
+- `set_xxx(int index, value)` 设置特定位置的值。
+- `clear_xxx()` 清空所有元素
+
+```cpp
+// repeated string names = 4
+const RepeatedPtrField<std::string>& names() const;
+RepeatedPtrField<std::string>* mutable_names();
+void add_names(const std::string& value);
+std::string* add_names();
+const std::string& names(int index) cons;
+std::string* mutable_names(int index);
+void set_names(int index, const std::string& value);
+void clear_names();
+```
+
+### oneof类型
+
+- 每个 oneof 生成一个枚举类型，表示当前设置的字段
+- 每个字段的访问方法与普通字段类似，但设置其中一个会清除其他字段
+- 有 case 方法返回当前设置的字段枚举值
+- `clear_` 方法清空整个 oneof
+
+```cpp
+// oneof Data { string name = 5; int32 number = 6;}
+```
+
+### map类型
+
+- 生成类似于 `std::map` 的接口。
+- `mutable_map()` 返回指向map的指针。
+- insert和查找方法可能通过辅助函数实现
+
+```cpp
+// map<int32, string> values = 7;
+const ::google::protobuf::Map<int32, std::string>& values() cons;
+::google::protobuf::Map<int32, std::string>* mutable_values();
+// 支持类似 std::map 的操作（如 insert, find, erase 等）
+```
+
+## bytes 类型
+
+```cpp
+// bytes raw_data = 8;
+// 生成的接口与 string 一致
+```
+
+### Message 自带函数
+
+每一个消息还包含了其他一系列函数，用来检查或管理整个消息
 
 ```cpp
 bool IsInitialized() const; //检查是否全部的required字段都被置（set）了值
-
 void CopyFrom(const Person& from); //用外部消息的值，覆盖调用者消息内部的值
-
 void Swap(Person *p);  // 交换两个对象
-
 void Clear();	//将所有项复位到空状态（empty state）。
-
 int ByteSize() const;	//消息字节大小
 ```
 
