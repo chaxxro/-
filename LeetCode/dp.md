@@ -240,6 +240,12 @@ dp[i] : sum(subset(...)) == i
 
 [分析](https://www.youtube.com/watch?v=Z39RHxb2Lew)
 
+## lc873
+
+[题目](https://leetcode.com/problems/length-of-longest-fibonacci-subsequence/description/?envType=daily-question&envId=2025-02-27)
+
+[分析](https://www.youtube.com/watch?v=Py3Jj0M1McY)
+
 ## lc894
 
 [题目](https://leetcode.com/problems/all-possible-full-binary-trees/description/)
