@@ -24,3 +24,7 @@ BITPOS key bit [start [end]]
 BITOP operation destkey key [key ...]
 ```
 
+## 使用场景
+
+1. 状态监控
+2. 功能开关

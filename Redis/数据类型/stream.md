@@ -1,13 +1,17 @@
 # stream
 
+主要用于消息队列的场景，支持多消费者组、消息持久化、ACK 确认机制，这些是 Pub/Sub 所不具备的
+
+- 每条消息由唯一 ID 和键值对数据组成，格式为 `ID: {field1 value1, field2 value2 ...}`
+- 消费者组允许多个消费者组独立消费同一 Stream，每个组维护自己的消费进度
+- 消息 ID 支持自动生成（如 `*` 表示由 Redis 生成）或手动指定（格式为 `<时间戳>-<序号>`，如 `1630000000000-0`）
+- Stream 数据持久化在 Redis 中，重启后不丢失
+
 ## 命令
 
 ```sh
 # 插入一条消息
 XADD key [NOMKSTREAM] [MAXLEN|MINID [=|~] threshold [LIMIT count]] *|ID field value [field value ...]
-# id 为 * 表示让 Redis 为插入的数据自动生成一个全局唯一的 id
-# 也可以直接在消息队列名称后自行设定一个 id 号，只要保证这个 id 号是全局唯一的就行
-# 生成的消息的全局唯一 id 由两部分组成
 
 # 获取总长度
 XLEN key

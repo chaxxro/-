@@ -310,6 +310,14 @@ dp[i] = min(dp0[i - 1], dp1[i - 1]) if s[i] == 1
 
 [题目](https://leetcode.com/problems/partition-array-for-maximum-sum/description/)
 
+## lc1092
+
+[题目](https://leetcode.com/problems/shortest-common-supersequence/description/?envType=daily-question&envId=2025-02-28)
+
+[分析](https://www.cnblogs.com/grandyang/p/14597144.html)
+
+[分析](https://www.youtube.com/watch?v=rfV2BJp8YA8)
+
 ## lc1143
 
 ```cpp

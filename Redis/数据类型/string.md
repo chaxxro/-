@@ -86,6 +86,7 @@ SET mykey "this is a data"
 
 ## 使用场景
 
-1.  缓存数据，提高查询性能
-2. 计数器
-3. 共享 Session
+1.  缓存数据
+2.  计数器、限流
+3.  共享 Session
+4.  分布式锁

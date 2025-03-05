@@ -106,3 +106,10 @@ ZSCAN key cursor [MATCH pattern] [COUNT count]
 - 当 SortedSet 中的元素数量较少且每个元素的分数和值都较小时，Redis 使用 `ziplist` 数据结构来实现 
 - 当 SortedSet 中的元素数量较多或每个元素的分数和值都较大时，Redis 使用 `skiplist` 数据结构来实现 
 - 当 SortedSet 中的元素数量或大小发生变化时，Redis 会自动调整底层数据结构以保持最佳性能
+
+## 使用场景
+
+1. 排行榜系统
+2. 实时数据统计
+3. 以时间戳为 score 的 timeline
+
