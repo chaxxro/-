@@ -23,3 +23,8 @@ BFS + 双向 BFS
 ## lc1765
 
 [题目](https://leetcode.com/problems/map-of-highest-peak/description/?envType=daily-question&envId=2025-01-22)
+
+## lc2115
+
+[题目](https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/description/?envType=daily-question&envId=2025-03-21)
+

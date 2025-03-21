@@ -44,8 +44,13 @@
 
 [题目](https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings/description/)
 
+## lc2115
+
+[题目](https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/description/?envType=daily-question&envId=2025-03-21)
+
 ## Lc2467
 
 [题目](https://leetcode.com/problems/most-profitable-path-in-a-tree/?envType=daily-question&envId=2025-02-24)
 
 [分析](https://www.bilibili.com/video/BV1qe4y1G7jy/?vd_source=85004908aeb75ae8d616c254af2684fe)
+
