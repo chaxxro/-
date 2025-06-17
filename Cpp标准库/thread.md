@@ -310,3 +310,21 @@ thread& operator=(thread&& _Other) noexcept
 ## 让出时间片
 
 `std::this_thread::yield()` 将当前线程所抢到的 CPU 时间片让给其他线程，等到其他线程使用完时间片后，再由操作系统调度，当前线程再和其他线程一起开始抢 CPU 时间片
+
+## CPU 亲和性
+
+当操作系统将一个线程调度到某个核心时，它不会就一直把它固定在那里直到线程执行完成。如果调度器认为将线程迁移到其他核心更有利（这取决于当前各个CPU核的负载），它可能会将线程在不同核之间移动。这就意味着程序的性能可能会有所变化——甚至变化很大
+
+每个主流操作系统都支持设置线程亲和性，也就是可以告诉操作系统，让某个线程只运行在指定的物理核心上
+
+`std::thread` 提供了一个 `native_handle()` 方法，可以拿到底层实际使用的线程句柄。在 Linux 上 `std::thread` 的原始线程句柄是 `pthread_t`，可以调用 `pthread_setaffinity_np` 把线程绑定到一个具体的 CPU 核心上。这样我们就能用更低层的方式控制线程在哪个核心上运行，从而减少线程频繁迁移造成的性能损耗，比如缓存失效和调度开销
+
+```cpp
+cpu_set_t cpu_set_1;
+CPU_ZERO(&cpu_set_1);
+CPU_SET(0, &cpu_set_1);
+
+std::thread t0([&]() { work(a.val); });
+pthread_setaffinity_np(t0.native_handle(), sizeof(cpu_set_t), &cpu_set_1);
+```
+

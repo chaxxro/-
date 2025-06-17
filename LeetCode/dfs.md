@@ -54,3 +54,6 @@
 
 [分析](https://www.bilibili.com/video/BV1qe4y1G7jy/?vd_source=85004908aeb75ae8d616c254af2684fe)
 
+## lc3373
+
+[题目](https://leetcode.com/problems/maximize-the-number-of-target-nodes-after-connecting-trees-ii/description/?envType=daily-question&envId=2025-05-29)

@@ -28,3 +28,8 @@ BFS + 双向 BFS
 
 [题目](https://leetcode.com/problems/find-all-possible-recipes-from-given-supplies/description/?envType=daily-question&envId=2025-03-21)
 
+## lc2503
+
+[题目](https://leetcode.com/problems/maximum-number-of-points-from-grid-queries/description/?envType=daily-question&envId=2025-03-28)
+
+[分析](https://github.com/doocs/leetcode/blob/main/solution/2500-2599/2503.Maximum%20Number%20of%20Points%20From%20Grid%20Queries/README.md)

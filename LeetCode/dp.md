@@ -268,8 +268,6 @@ dp[i][j] = dp[k][j] + dp[i - k][j + k]
 */
 ```
 
-
-
 [题目](https://leetcode.com/problems/maximum-sum-circular-subarray/description/?envType=study-plan-v2&envId=top-interview-150)
 
 ## lc926
@@ -433,9 +431,17 @@ dp[i] 表示 s[0~i] 平衡的删除操作
 
 [分析](https://github.com/doocs/leetcode/blob/main/solution/1600-1699/1653.Minimum%20Deletions%20to%20Make%20String%20Balanced/README.md)
 
+## lc2140
+
+[题目](https://leetcode.com/problems/solving-questions-with-brainpower/description/?envType=daily-question&envId=2025-04-01)
+
+[分析](https://github.com/doocs/leetcode/blob/main/solution/2100-2199/2140.Solving%20Questions%20With%20Brainpower/README.md)
+
 ## lc1655
 
 Bitmask + subsets + DP
+
+
 
 ```cpp
 /*
