@@ -2,33 +2,31 @@
 
 ## SFINAE
 
-SFINAE 是 Substitution Failure Is Not An Error 的缩写，是一种 C++ 中的编译期技术，用于在模板实例化过程中，当尝试进行模板参数的替换时，如果出现了替换失败（通常是由于找不到相应的成员函数、操作符等），不会导致编译错误，而是会选择其他可行的模板特化
+SFINAE 是 Substitution Failure Is Not An Error 的缩写，是一种 C++ 中的编译期技术，用于在模板实例化过程中
 
-std::enable_if 就是利用了 SFNIAE，通过在模板参数替换失败时移除特化，实现了在编译期间的条件选择
+当编译器尝试进行模板参数的替换时，如果出现了替换失败（通常是由于找不到相应的成员函数、操作符等），不会生成编译错误，而是会选择其他可行的模板特化
 
-```cpp
-template<bool B, class T = void>
-struct enable_if {};
- 
-template<class T>
-struct enable_if<true, T> { typedef T type; };
-```
+`std::enable_if` 就是利用了 SFNIAE，通过在模板参数替换失败时移除特化，实现了在编译期间的条件选择
 
 ```cpp
+// 主模板，默认继承 std::false_type，表示任意类型 T 都不是字符串类型
 template <typename T, typename Enable = void>
 struct is_string : std::false_type {};
 
+// 针对特定类型的偏特化版本
+// 当条件满足时，该特化版本的有效性（存在性）被启用，否则SFINAE会忽略该特化，使用主模板
 template <typename T>
 struct is_string<T, std::enable_if_t<std::is_same_v<T, std::string> ||
-                                      std::is_same_v<T, const char*> ||
-                                      std::is_same_v<T, char[]>>> : std::true_type {};
+                                     std::is_same_v<T, const char*> ||
+                                     std::is_same_v<T, char[]>>> : std::true_type {};
 
+// 针对字符串类型
 template <typename T, typename = std::enable_if_t<is_string<T>::value, T>>
 void fun(T t) {
   std::string v = t;
 }
 
-
+// 针对非字符串类型
 template <typename T, std::enable_if_t<!is_string<T>::value, bool> = true>
 void fun(T t) {
   std::cout << "foo fallback\n";
