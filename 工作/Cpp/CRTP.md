@@ -3,7 +3,8 @@
 CRTP 是 Curiously Recurring Template Pattern 的缩写，中文译为奇异的递归模板模式
 
 ```cpp
-template <typename T> class Base {
+template <typename T> 
+class Base {
 public:
   void interface() { static_cast<T *>(this)->imp(); };
 };
@@ -41,7 +42,8 @@ CRTP 总结起来，其有以下两个特点：
 ### 静态多态
 
 ```cpp
-template <typename T> class Base {
+template <typename T> 
+class Base {
 public:
   void interface() { static_cast<T *>(this)->imp(); }
   void imp() { std::cout << "in Base::imp" << std::endl; }

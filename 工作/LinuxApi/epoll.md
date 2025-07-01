@@ -130,7 +130,7 @@ epoll 的描述符事件有两种触发模式：LT（level trigger）和 ET（ed
 
 ## 适用文件描述符类型
 
-只有底层驱动实现了 `file_operations` 中 `poll`函数的文件类型才可以被 `epoll`监视，所以使用 `open` 打开的普通文件描述符不能被加入 `epoll
+只有底层驱动实现了 `file_operations` 中 `poll`函数的文件类型才可以被 `epoll`监视，所以使用 `open` 打开的普通文件描述符不能被加入 `epoll`
 
 ## epoll 底层中的 wq 队列
 
