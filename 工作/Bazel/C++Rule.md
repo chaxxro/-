@@ -57,7 +57,7 @@ cc_library(name, deps, srcs, data, hdrs, additional_compiler_inputs, additional_
 
 - hdrs 导出的头文件列表
 
-- copts/nocopts	传递给 C++ 编译命令的参数
+- copts/nocopts 传递给 C++ 编译命令的参数
 
 - defines 宏定义列表
 

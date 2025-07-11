@@ -7,7 +7,7 @@
 # 如果给定的哈希表并不存在， 那么创建一个新的哈希表
 # 如果 field 已经存在于哈希表中， 那么它的旧值将被新值覆盖
 HSET key field value [field value ...]
-HMSET key field value [field value ...]
+HMSET key field value [field value ...]  # deprecated
 # 不存在则创建
 HSETNX key field value
 # 为 field 的值加上增量，增量可以为负数

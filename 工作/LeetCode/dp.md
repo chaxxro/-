@@ -431,6 +431,24 @@ dp[i] 表示 s[0~i] 平衡的删除操作
 
 [分析](https://github.com/doocs/leetcode/blob/main/solution/1600-1699/1653.Minimum%20Deletions%20to%20Make%20String%20Balanced/README.md)
 
+## lc1751
+
+```cpp
+/*
+1. 记忆化搜索
+dfs(i,k)表示从第i个会议开始，最多参加k个会议的最大价值和
+dfs(i,k)=max(dfs(i+1,k), dfs(j,k-1)+v)
+
+2. dp
+dp[i][j] 前i个事件最多参加j个会议的最大价值和
+dp[i+1][k]=max(dp[i][k], dp[j][k-1])
+*/
+```
+
+[题目](https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended-ii/?envType=daily-question&envId=2025-07-07)
+
+[分析](https://github.com/doocs/leetcode/blob/main/solution/1700-1799/1751.Maximum%20Number%20of%20Events%20That%20Can%20Be%20Attended%20II/README.md)
+
 ## lc2140
 
 [题目](https://leetcode.com/problems/solving-questions-with-brainpower/description/?envType=daily-question&envId=2025-04-01)
