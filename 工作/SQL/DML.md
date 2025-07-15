@@ -49,5 +49,3 @@ select * from tablename into outfile "file.csv" fields terminated BY ',' optiona
 ```sql
 load data infile "/path/to/file.csv" into table tablename
 ```
-
-## 

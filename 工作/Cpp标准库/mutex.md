@@ -15,7 +15,7 @@ std::shared_timed_mutex|提供共享互斥设施并带有超时功能
 
 ## mutex 通用操作
 
-`lock`、`try_lock`、`unlock` 四个 `mutex` 都支持这些操作，但是不同类在行为上有些微区别
+四个 `mutex` 都支持 `lock`、`try_lock`、`unlock` 这些操作，但是不同类在行为上有些微区别
 
 ### lock
 

@@ -4,7 +4,9 @@
 
 `std::lock_guard` 利用了 C++ RAII 的特性，在构造函数中上锁，析构函数中解锁，从而保证了一个已锁的互斥量总是会被正确的解锁
 
-`std::lock_guard` 没有任何成员函数
+`std::lock_guard` 没有任何成员函数，没有额外的开销，只包含一个互斥量的引用
+
+不能复制或移动`lock_guard`对象，确保锁的所有权单一
 
 ```cpp
 template <class Mutex> class lock_guard {
@@ -53,3 +55,33 @@ int main() {
 ## unique_lock
 
 `std::unique_lock` 有更多成员函数函数，可以手动释放锁，一般配合条件变量使用
+
+- 可以在需要时手动锁定和解锁互斥量
+- 可以在构造时不立即锁定互斥量，稍后再锁定
+- 可以与`std::condition_variable`一起使用，因为条件变量需要手动解锁和重新锁定
+- 可以通过移动转移所有权，但不能复制
+
+```cpp
+void flexible_function() {
+    std::unique_lock<std::mutex> lock(mtx); // 构造时加锁
+    
+    // 手动解锁（临时释放锁）
+    lock.unlock();
+    
+    // 执行非临界区代码
+    non_critical_work();
+    
+    // 重新加锁
+    lock.lock();
+    
+    // 继续临界区操作
+} // 作用域结束时自动解锁
+
+void defer_lock() {
+  // 延迟加锁构造
+  std::unique_lock<std::mutex> lock(mtx, std::defer_lock);
+  // ...其他操作...
+  lock.lock(); // 需要时手动加锁
+}
+```
+

@@ -171,5 +171,3 @@ alter table tablename drop index indexname
 ```sql
 alter table tablename type engine=enginename
 ```
-
-## 

@@ -79,5 +79,3 @@ set password for xx@localhost=password("1234")
 # 修改当前用户密码
 set password = password("1234")
 ```
-
-## 
