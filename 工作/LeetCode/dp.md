@@ -493,3 +493,17 @@ for (int k = 0; k <= factory[i - 1][1]; ++k) {
 */
 ```
 
+## lc3302
+
+```cpp
+/*
+dp[i][r] 表示以 nums[i] 结尾的子序列，余数是 r 的最大长度
+(nums[j] + nums[i]) % k = r
+d = nums[j] % k = (r - nums[i] % k + k) % k
+dp[i][r] = dp[j][r] + 1
+*/
+```
+
+[题目](https://leetcode.com/problems/find-the-maximum-length-of-valid-subsequence-ii/description/?envType=daily-question&envId=2025-07-17)
+
+[分析](https://www.youtube.com/watch?v=Ax9MdeFDfXk)

@@ -3,8 +3,6 @@
 ```cpp
 [capture](parameters)->return-type {body}
 ```
-{% asset_img 01.png %}
-
 lambda 表达式使得可以使用匿名函数
 
 使用 `auto` 关键字保存 lambda 表达式，之后就可以当做正常的函数使用
@@ -47,3 +45,5 @@ private:
     string str_;
 };
 ```
+
+Lambda 表达式定义在类的成员函数内部时，Lambda 会继承了其定义位置的访问权限，从而在 Lambda 内部可以访问类的私有成员
