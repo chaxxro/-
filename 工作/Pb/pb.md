@@ -325,15 +325,14 @@ void clear_names();
 
 ### map类型
 
-- 生成类似于 `std::map` 的接口。
-- `mutable_map()` 返回指向map的指针。
+- 生成类似于 `std::map` 的接口
+- `mutable_map()` 返回指向 map 的指针
 - insert和查找方法可能通过辅助函数实现
 
 ```cpp
 // map<int32, string> values = 7;
 const ::google::protobuf::Map<int32, std::string>& values() cons;
 ::google::protobuf::Map<int32, std::string>* mutable_values();
-// 支持类似 std::map 的操作（如 insert, find, erase 等）
 ```
 
 ## bytes 类型

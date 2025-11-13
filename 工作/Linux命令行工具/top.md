@@ -58,7 +58,7 @@ top [-a | -d | -e | -c mode]
 
 第二行：当前系统进程情况
 
-第三行：用户空间占用 CPU 的百分比、内核空间占用 CPU 的百分比、改变过优先级的进程占用 CPU 的百分比、空闲 CPU 百分比、IO 等待占用 CPU 的百分比、硬中断（Hardware IRQ）占用 CPU 的百分比、软中断（Software Interrupts）占用 CPU 的百分比
+第三行：us 用户空间占用 CPU 的百分比、sy 内核空间占用 CPU 的百分比、ni 改变过优先级的进程占用 CPU 的百分比、id 空闲 CPU 百分比、wa IO 等待占用 CPU 的百分比、hi 硬中断（Hardware IRQ）占用 CPU 的百分比、si 软中断（Software Interrupts）占用 CPU 的百分比
 
 第四行：物理内存总量、空闲内存总量、使用中的内存总量、缓存的内存量
 
