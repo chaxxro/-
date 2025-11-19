@@ -257,3 +257,40 @@ int main() {
   return 0;
 }
 ```
+
+## atomic_thread_fence
+
+`std::atomic_thread_fence`是一个独立的内存栅栏，不依赖于特定的原子变量，它在线程执行中创建一个内存排序约束点
+
+### 释放栅栏
+
+防止栅栏之前的所有内存操作重排到栅栏之后
+
+```cpp
+std::atomic_thread_fence(std::memory_order_release);
+
+data = 42;                            // 普通写操作
+std::atomic_thread_fence(std::memory_order_release);  // 释放栅栏
+flag.store(true, std::memory_order_relaxed);  //  relaxed存储
+// 保证 data=42 不会被重排到栅栏之后
+```
+
+### 获取栅栏
+
+防止栅栏之后的所有内存操作重排到栅栏之前
+
+```cpp
+if (flag.load(std::memory_order_relaxed)) {  // relaxed加载
+    std::atomic_thread_fence(std::memory_order_acquire);  // 获取栅栏
+    int value = data;  // 保证这个读取在栅栏之后执行
+}
+```
+
+### 顺序一致栅栏
+
+兼具 release 和 acquire 语义，保证所有线程看到相同的操作顺序
+
+```cpp
+std::atomic_thread_fence(std::memory_order_seq_cst);
+```
+
