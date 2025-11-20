@@ -294,3 +294,67 @@ if (flag.load(std::memory_order_relaxed)) {  // relaxed加载
 std::atomic_thread_fence(std::memory_order_seq_cst);
 ```
 
+### 与原子变量的区别
+
+原子变量作用范围仅针对与特定原子操作相关的内存操作
+
+```cpp
+std::atomic<bool> x{false}, y{false};
+int data1, data2;
+
+void threadA() {
+    data1 = 42;           // 普通写
+    data2 = 100;          // 普通写
+    x.store(true, std::memory_order_release);  // 只建立x的同步
+    y.store(true, std::memory_order_release);  // 只建立y的同步
+}
+
+void threadB() {
+    if (x.load(std::memory_order_acquire)) {  // 只同步x相关的操作
+        // 这里能保证看到data1 = 42和data2 = 100
+    }
+}
+
+void threadC() {
+    if (y.load(std::memory_order_acquire)) {  
+        // 同样保证看到data1=42, data2=100
+    }
+}
+/*
+每个 release-store 创建一个同步点
+如果有多个变量，每个都有自己的同步时间线
+不同线程可能通过不同变量建立同步，但看到的操作顺序可能不一致
+*/
+```
+
+独立栅栏作用范围是所有内存操作，不依赖特定原子变量
+
+```cpp
+void threadA() {
+    data1 = 42;
+    data2 = 100;
+    std::atomic_thread_fence(std::memory_order_release);  // 全局栅栏
+    x.store(true, std::memory_order_relaxed);
+    y.store(true, std::memory_order_relaxed);
+}
+
+void threadB() {
+    if (x.load(std::memory_order_relaxed)) {
+        std::atomic_thread_fence(std::memory_order_acquire);  // 全局获取
+        // 保证看到data1和data2的写入
+    }
+}
+
+void threadC() {
+    if (y.load(std::memory_order_relaxed)) {
+        std::atomic_thread_fence(std::memory_order_acquire);  // 全局获取
+        // 同样保证看到data1和data2的写入
+    }
+}
+/*
+单个栅栏创建统一的同步点
+所有变量在同一个时间点同步
+提供更强的顺序一致性保证
+*/
+```
+
