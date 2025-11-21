@@ -12,6 +12,8 @@
 ```sh
 # 插入一条消息
 XADD key [NOMKSTREAM] [MAXLEN|MINID [=|~] threshold [LIMIT count]] *|ID field value [field value ...]
+# key：Stream 的名称
+# [NOMKSTREAM] 如果指定，当 Stream 不存在时，不会自动创建 Stream不存在，会自动创建一个新的Stream
 
 # 获取总长度
 XLEN key
