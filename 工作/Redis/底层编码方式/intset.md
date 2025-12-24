@@ -12,7 +12,7 @@
 #define INTSET_ENC_INT64 (sizeof(int64_t))
 
 typedef struct intset {
-    // 支持 INTSET_ENC_INT16、INTSET_ENC_INT32、INTSET_ENC_INT164
+    // 支持 INTSET_ENC_INT16、INTSET_ENC_INT32、INTSET_ENC_INT64
     uint32_t encoding;
     uint32_t length;    //集合包含的元素数量
     int8_t contents[];  //保存元素的数组
@@ -32,6 +32,6 @@ typedef struct intset {
 ## 优缺点
 
 - 使用连续的内存空间存储整数，这使得它在内存占用方面非常紧凑
-- 使用数组来存储整数，因此它的插入、删除和查找操作的时间复杂度都是 O(1)
+- 使用数组来存储整数，因此查找时间复杂度 O(log n)，插入、删除需要移动元素所以时间复杂度 O(n)
 - 整数是有序存储的，这使得它支持范围查询操作
 - 当 `intset` 中的整数超出当前编码范围时，它会自动升级到更大的编码类型，以确保能够存储更大的整数

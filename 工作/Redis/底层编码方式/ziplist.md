@@ -23,7 +23,7 @@ ziplist 是为了节约内存而设计的，它不是一个用结构体定义的
 |`zllen`|uint16_t|ziplist 中节点的数量<br />1. 当这个值小于 UINT16_MAX （65535）时，这个值就是 ziplist 中节点的数量<br />2.  当这个值等于 UINT16_MAX 时，节点的数量需要遍历整个 ziplist 才能计算得出|小端|
 |`zlend`|uint8_t|255 的二进制值 1111 1111 （UINT8_MAX） ，用于标记 ziplist 的末端|小端|
 
-由于没有 ziplist 结构体，所以内部使用 `unsigned char*` 指针指向 zippiest
+由于没有 ziplist 结构体，所以内部使用 `unsigned char*` 指针指向 ziplist
 
 ```cpp
 // ziplist 结束标志位
