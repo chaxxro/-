@@ -19,16 +19,34 @@ typedef struct zskiplistNode {
     struct zskiplistLevel {
         struct zskiplistNode *forward;  // 前进指针
         unsigned long span;  // 跨度，到下一个节点的距离
+        // 指在第 0 层，当前节点与下一个节点中间节点个数
     } level[];  // 柔性数组，表示节点的层级
 } zskiplistNode;
 
 // 跳表
 typedef struct zskiplist {
-    struct zskiplistNode *header, *tail;  // 头节点和尾节点
+    // 特殊的哨兵节点，它不存储实际数据，存在于所有层级，作为跳表的起点
+    // header->level[i].forward 指向该层的第一个实际数据节点
+    struct zskiplistNode *header;
+    // 指向第 0 层的最后一个实际数据节点
+    struct zskiplistNode *tail;
     unsigned long length;  // 节点数量
     int level;  // 最大层级
     // 第 0 层是全部数据
 } zskiplist;
+```
+
+## 新建节点
+
+```cpp
+zskiplistNode *zslCreateNode(int level, double score, sds ele) {
+    // 分配内存：基础结构 + (level-1) 个额外的 zskiplistLevel
+    zskiplistNode *zn = zmalloc(sizeof(*zn) + level * sizeof(struct zskiplistLevel));
+    // 设置分数和元素值
+    zn->score = score;
+    zn->ele = ele;
+    return zn;
+}
 ```
 
 ## 层级算法
@@ -64,9 +82,9 @@ zskiplistNode *zslInsert(zskiplist *zsl, double score, sds ele) {
     serverAssert(!isnan(score));
     x = zsl->header;
     
-    // Step 1: 从高层向低层查找插入位置
+    // Step 1: 从高向低查找每层的插入位置
     for (i = zsl->level-1; i >= 0; i--) {
-        // 存储从header到每层update节点的排名
+        // 存储从 header 到每层 update 节点的排名
         rank[i] = i == (zsl->level-1) ? 0 : rank[i+1];
         
         // 在当前层查找合适的插入位置
@@ -75,9 +93,13 @@ zskiplistNode *zslInsert(zskiplist *zsl, double score, sds ele) {
                (x->level[i].forward->score == score &&
                 sdscmp(x->level[i].forward->ele, ele) < 0))) {
             rank[i] += x->level[i].span;
+            // 当前节点小于待插入的值，则去同一层的下一个节点查找
             x = x->level[i].forward;
         }
+        // 因为比较的是 x->level[i].forward 与待插入的数据
+        // 所以新节点需要插入在 x 后面
         update[i] = x;  // 记录每层需要更新的节点
+        // 下一层的更新继续从 x 开始
     }
     
     // Step 2: 随机生成新节点的层数
@@ -87,8 +109,9 @@ zskiplistNode *zslInsert(zskiplist *zsl, double score, sds ele) {
     if (level > zsl->level) {
         for (i = zsl->level; i < level; i++) {
             rank[i] = 0;
-            update[i] = zsl->header;
-            update[i]->level[i].span = zsl->length;
+            update[i] = zsl->header;  // 新层直接连到 header
+            update[i]->level[i].span = zsl->length;  // 新层只有 header，后面是 NULL
+            // 先初始值成全部节点数，后面再具体计算
         }
         zsl->level = level;
     }
@@ -122,8 +145,6 @@ zskiplistNode *zslInsert(zskiplist *zsl, double score, sds ele) {
     return x;
 }
 ```
-
-
 
 ## 查找操作
 
