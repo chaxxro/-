@@ -13,11 +13,13 @@ SETBIT key offset value
 
 # 当 offset 比字符串值的长度大，或者 key 不存在时，返回 0
 GETBIT key offset
+
 # 返回 1 的数量，key 不存在则为 0
 BITCOUNT key [start end]
-# 返回 [start, end] 区间内第一个等于 bit 的下表
+
+# 返回 [start, end] 区间内第一个等于 bit 的下标
 # bit 只支持 0、1
-BITPOS key bit [start [end]]
+BITPOS key bit [start [end [BYTE | BIT]]]
 
 # 对多个 key 做并、或、异或、非计算，并将结果写入 destkey
 # operation 支持 AND、OR、XOR、NOT
