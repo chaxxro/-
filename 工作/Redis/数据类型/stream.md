@@ -13,7 +13,21 @@
 # 插入一条消息
 XADD key [NOMKSTREAM] [MAXLEN|MINID [=|~] threshold [LIMIT count]] *|ID field value [field value ...]
 # key：Stream 的名称
-# [NOMKSTREAM] 如果指定，当 Stream 不存在时，不会自动创建 Stream不存在，会自动创建一个新的Stream
+# [NOMKSTREAM] 如果指定，当 Stream 不存在时，不会自动创建
+
+# 基本用法：自动生成 ID
+XADD mystream * field1 value1 field2 value2
+# 返回：1703845200000-0（时间戳-序号）
+
+# 手动指定 ID（必须大于上一条消息 ID）
+XADD orders 1703845300000-0 order_id 1002 user_id 5002 amount 199.99
+# 返回：1703845300000-0
+
+# 限制 Stream 长度（保留最新 1000 条）
+XADD orders MAXLEN ~ 1000 * order_id 1003 user_id 5003 amount 399.99
+# ~ 表示近似裁剪（性能更好）
+# = 表示精确裁剪
+
 
 # 获取总长度
 XLEN key
