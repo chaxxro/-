@@ -28,7 +28,6 @@ XADD orders MAXLEN ~ 1000 * order_id 1003 user_id 5003 amount 399.99
 # ~ 表示近似裁剪（性能更好）
 # = 表示精确裁剪
 
-
 # 获取总长度
 XLEN key
 
@@ -69,5 +68,47 @@ XREADGROUP GROUP group-name consumer-name [COUNT count] [BLOCK milliseconds] [NO
 
 # 组内消费确认
 XACK key group-name id
+```
+
+## 使用案例
+
+以订单处理系统举例
+
+```sh
+# 创建第一个订单事件
+XADD orders:events * order_id 1001 user_id 2001 action "order_created" items "item1,item2" timestamp "1672531200"
+# 返回消息ID
+"1672531200000-0"
+
+# 创建更多订单
+XADD orders:events * order_id 1002 user_id 2002 action "order_created" items "item3"
+XADD orders:events * order_id 1003 user_id 2003 action "order_created" items "item4,item5,item6"
+
+# 创建库存处理消费者组（从流的开头开始消费）
+XGROUP CREATE orders:events inventory-group 0
+# 创建通知处理消费者组
+XGROUP CREATE orders:events notification-group 0
+# 创建积分处理消费者组
+XGROUP CREATE orders:events points-group 0
+
+# 库存扣减服务
+XREADGROUP GROUP inventory-group stock-consumer-1 COUNT 2 STREAMS orders:events >
+# 输出：读取到订单1001, 1002的消息
+# 处理消息后确认
+XACK orders:events inventory-group 1672531200000-0
+XACK orders:events inventory-group 1672531201000-0
+
+# 通知服务
+XREADGROUP GROUP notification-group notify-consumer-1 COUNT 1 STREAMS orders:events >
+# 输出：读取到订单1001的消息
+
+# 积分服务
+XREADGROUP GROUP points-group points-consumer-1 COUNT 3 STREAMS orders:events >
+# 输出：读取到所有3个订单的消息
+
+# 确认处理完成
+XACK orders:events points-group 1672531200000-0
+XACK orders:events points-group 1672531201000-0
+XACK orders:events points-group 1672531202000-0
 ```
 
