@@ -43,6 +43,8 @@ r
 
 ## 脚本参数设置
 
+可以放入启动配置文件中，常位于 /home/username/.gdbinit
+
 ```
 set pagination off # 全部输出，中间不会暂停
 set logging on # 打开日志模式，将调试信息输出至日志中
